@@ -1,0 +1,27 @@
+#include <SPI.h>
+#include <RF24.h>
+
+RF24 radio(7, 8); // CE, CSN
+const byte address[6] = "00001";
+
+void setup() {
+  // Initialize Serial communication
+  Serial.begin(9600);
+
+  // Initialize the radio module
+  radio.begin();
+  radio.openReadingPipe(1, address);
+  radio.startListening();
+}
+
+void loop() {
+  if (radio.available()) {
+    // Read the data received from the transmitter
+    char receivedData[32] = "";
+    radio.read(&receivedData, sizeof(receivedData));
+    
+    // Print the received data
+    Serial.print("Received data: ");
+    Serial.println(receivedData);
+  }
+}
